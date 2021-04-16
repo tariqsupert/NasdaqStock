@@ -1,36 +1,86 @@
-
 {% extends 'base.html'%}
+{% load static %}
 {% load humanize %}
+
+
+<!doctype html>
+<html lang="en">
+<head>
+
+</head>
 {% block content %}
-
-{% if ticker %}
-    {{ticker}}
-{% endif %}
-
-
-{%if api %}
-    {% if api == "Error..."%}
-        There was a problem with your ticker symbol,
-        please try again...
-    {% else %}
-        <h1>{{ api.companyName }}</h1><br/>
-        Price: $ {{ api.latestPrice|intcomma}}<br/>
-        Previous Close: ${{ api.previousClose|intcomma}}<br/>
-        Market Cap: ${{ api.marketCap|intcomma}}   ({{ api.marketCap|intword}})<br/>
-        YTD Change:{{ api.ytdChange|floatformat:5}} %<br/>
-        52Wk High: ${{ api.week52High|intcomma}}<br/>
-        52Wk Low: ${{ api.week52Low|intcomma}}<br/>
-        {{ api.}}<br/>
-        {{ api.}}<br/>
+<body>
+    <header></header>
+    
+        
+            <form action="{% url 'home' %}" class="form-inline my-2 my-lg-0" method="POST">
+                {% csrf_token %}
+                <input class="form-control mr-sm-2" type="search" placeholder="Enter Ticker" aria-label="Search" name="ticker">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Get Stock</button>
+            </form>
+            <br />
+            <br />
 
 
-      
+            {%if api %}
+            {% if api == "Error..."%}
+            There was a problem with your ticker symbol,
+            please try again...
+            {% else %}
+
+            <table class="table table-hover table-bordered border-dark  CELLPADDING='4' CELLSPACING='3'   ">
+                <thead class="thead-light">
+                    <tr>
+                        <th COLSPAN="2">
+                            <h1>{{ api.companyName }}</h1>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>DETAILS</th>
+                        <th>VALUE</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <TD>Stock Price</TD>
+                    <TD>${{api.latestPrice|intcomma}}</TD>
+                </tr>
+                <tr>
+                    <td>Previous Close</td>
+                    <td>${{ api.previousClose|intcomma}}</td>
+                </tr>
+                <tr>
+                    <td>Market Cap</td>
+                    <td>${{ api.marketCap|intcomma}}   ({{ api.marketCap|intword}})</td>
+                </tr>
+                <tr>
+                    <td>YTD Change</td>
+                    <td>{{ api.ytdChange|floatformat:5}} %</td>
+                </tr>
+                <tr>
+                    <td>52 WK High</td>
+                    <td>${{ api.week52High|intcomma}}</td>
+                </tr>
+                <tr>
+                    <td>52 WK Low</td>
+                    <td>${{ api.week52Low|intcomma}}</td>
+                </tr>
+            </table>
+
+            {%endif%}
+            {% endif %}
 
        
 
-    {% endif %}
-{% endif %}
+    
+
+    
+   
+    
 
 
+</body>
 
-{% endblock %}
+</html>
+
+ {% endblock %}
+

@@ -1,93 +1,103 @@
-
+ {%load static%}
 <!doctype html>
 <html lang="en">
-  {%load static%}
+
   {% load humanize %}
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'media/custom.css' %}">
+    
     <title>Stock Portfolio</title>
-  </head>
-  <body>
-    <nav class="navbar navbar-light" style="background-color: #e3f2fd;"></nav>
+</head>
+<body>
+    <nav class="navbar navbar-light py-3" style="background-color: #e3f2fd;"></nav>
     <nav class="navbar navbar-expand-lg navbar-dark  bg-primary">
-        <a class="navbar-brand" href="{% url 'home'%}">Stock Portfolio</a>
+        <div class="col-md-10">
+            <a class="navbar-brand" href="{% url 'home'%}">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>Stock</b></a>
+            <a class="navbar-brand" href="{% url 'about'%}"><b>About</b></a>
+            <a class="navbar-brand" href="{% url 'tickerDB'%}"> <b>Portfolio</b></a>
+        </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
         </button>
         
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'about'%}">About</a>
-            </li>
+            {%if user.is_authenticated%}
+                <div class="form-inline my-2 my-lg-0">
+                    <div class="p-2 text-white">Welcome {{user.username}}</div>
 
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'tickerDB'%}"> Add Ticker</a>
-            </li>
+                    <a href="{%url 'logout'%}">
+                        <button class="btn btn-outline-success my-2 my-sm-0 " type="submit"><b>Logout</b></button>
 
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'delete'%}"> Delete</a>
-            </li>
+                    </a>
+                </div>
+                         
+            {%else%}
+                <a href="{%url 'login'%}">
+                    <button class="btn btn-success mr-2 my-2 my-sm-0 " type="submit"><b>Login</b></button>
 
-          </ul>
-          
+                </a>
+                <a href="{%url 'register'%}">
+                    <button class="btn btn-info my-2 my-sm-0 " type="submit"><b>Register</b></button>
 
-          
-          
-           
-          <form action="{% url 'home' %}"    class="form-inline my-2 my-lg-0" method="POST">
-              {% csrf_token %}
-            <input class="form-control mr-sm-2" type="search" placeholder="Enter Ticker" aria-label="Search" name="ticker">
-            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Get Stock</button>
-          </form>
-        </div>
-      </nav>
-      <nav class="navbar navbar-light" style="background-color: #e3f2fd;"></nav>
-      
-
-        <div class="container">
-            <br /> 
-            {% if messages %}
-                  {% for message in messages %}
-                    <div class = "alert alert-warning alert-dismissable fade show" role="alert">
-                        <button class="close" data-dismiss="alert" >
-                          <large>x</large>
-
-                        </button>
-                        <strong>{{ message}}</strong>
-                    </div>
-                  {% endfor %} 
-              {% endif %}
-
-
-            {% block content %}
-            {% endblock %}
-        </div>
-
+                </a>
+            {%endif%}
         
-       
+</nav>
+    <nav class="navbar navbar-light py-3" style="background-color: #e3f2fd;"></nav>
+
+
+    <div class="container">
+        <br />
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissable fade show" role="alert">
+            <button class="close" data-dismiss="alert">
+                <large>x</large>
+
+            </button>
+            <strong>{{ message}}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer>
+        <div class="row" style="background-color: #e3f2fd">
+                <div class="col-md-2 ">               
+                    <a class="bb" href="#"><img src='{% static "media/bull_bear6.PNG" %}' alt="home" /></a>                
+                </div>
+                <div class="col-md-8 text-center">
+                     <h5 class="ug23"> Brought to you by <strong>UG23</strong> :   Joa Mampuya ~ Tariq Mahmood ~ Ali Shirpur</h5>
+                </div>
+        </div>
+    </footer>
+
+
 
     <!-- Optional JavaScript -->
-    
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  {%block js%}
-    
-  {%endblock js%}
-  
-  
-  </body>
+    {%block js%}
+
+    {%endblock js%}
+
+
+</body>
 </html>
+
+
 
 
 

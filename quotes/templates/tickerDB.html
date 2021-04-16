@@ -1,107 +1,107 @@
 <from django.contrib import messages>
 
-{% extends 'base.html'%}
-{% load humanize %}
+    {% extends 'base.html'%}
+    {% load humanize %}
 
-{% block content %}
+    {% block content %}
 
-<head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous"></head>
-<body>
-<h4><b>NASDAQ </b>Stock Tickers</h4>
-<br/>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    </head>
+    <body>
+        <h4><b>NASDAQ </b>Stock Tickers</h4>
+        <br />
 
+        <form action="{% url 'tickerDB' %}" class="form-inline my-2 my-lg-0" method="POST">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Enter Ticker Here" aria-label="Search" name="ticker">
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit"><b>Add</b></button>
+        </form><br><br>
+
+        <br /><br />
+
+        <table id="myTable" class="table table-hover table-bordered border-dark ">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Comany Name</th>
+                    <th scope="col">Stock Price</th>
+                    <th scope="col">Previous Close</th>
+                    <th scope="col">Market Cap</th>
+                    <th scope="col">YTD Change</th>
+                    <th scope="col">52WK High</th>
+                    <th scope="col">52WK Low</th>
+                    <th scope="col"><a>Delete</a></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {%if ticker%}
+
+                {%for list_item in api_Output%}
+                <tr>
+                    <th scope="row">{{list_item.companyName}}</th>
+                    <td> ${{ list_item.latestPrice|intcomma}}</td>
+                    <td> ${{ list_item.previousClose|intcomma}}</td>
+                    <td>${{ list_item.marketCap|intcomma}}   ({{ list_item.marketCap|intword}})</td>
+                    <td>{{ list_item.ytdChange|floatformat:5}} %</td>
+                    <td>${{ list_item.week52High|intcomma}}</td>
+                    <td>${{ list_item.week52Low|intcomma}}</td>
+                    
+                    <td><a href="admin" class="btn btn-danger">Delete</a> </td>
+
+                </tr>
+                {%endfor%}
+                {%endif%}
+
+            </tbody>
+
+        </table><br>
+        <br>
+
+    </body>
+
+    {% endblock %}
+
+    {%block js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.24/af-2.3.5/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/cr-1.5.3/fc-3.3.2/kt-2.6.1/r-2.2.7/rg-1.1.2/rr-1.2.7/sl-1.3.2/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.24/af-2.3.5/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/cr-1.5.3/fc-3.3.2/kt-2.6.1/r-2.2.7/rg-1.1.2/rr-1.2.7/sl-1.3.2/datatables.min.js"></script>
     
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src=https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js></script>
 
-  
-      
-        <form action="{% url 'tickerDB' %}"    class="form-inline my-2 my-lg-0" method="POST">
-          {% csrf_token %}
-          <input class="form-control mr-sm-2" type="search" placeholder="Enter Ticker Here" aria-label="Search" name="ticker">
-          <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit"><b>Add</b></button>
-        </form></br></br>
-        
-        
-          
-    <br/><br/>
+    <!-- new -->
+
+    <!-- new -->
+
+    <script>
+
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+
+                dom: 'B<"clear">lfrtip',
+                buttons: {
+                    name: 'primary',
+                    buttons:
+
+                        ['copy', 'csv', 'excel', 'pdf', 'print']
+
+
+                }
+
+            }
+            );
+        });
 
 
 
-<table id="myTable" class="table table-hover table-bordered border-dark ">
-  <thead class="thead-light">
-          <tr>
-            <th scope="col">Comany Name</th>
-            <th scope="col">Stock Price</th>
-            <th scope="col">Previous Close</th>
-            <th scope="col">Market Cap</th>
-            <th scope="col">YTD Change</th>
-            <th scope="col">52WK High</th>
-            <th scope="col">52WK Low</th>
-            <th scope="col"><a>Delete</a></th>
-          </tr>
-  </thead>
-  <tbody>
 
-    {%if ticker%}
-      
-        {%for list_item in api_Output%}
-            <tr>
-               <th scope="row">{{list_item.companyName}}</th>
-                <td> ${{ list_item.latestPrice|intcomma}}</td>
-                <td> ${{ list_item.previousClose|intcomma}}</td>
-                <td>${{ list_item.marketCap|intcomma}}   ({{ list_item.marketCap|intword}})</td>
-                <td>{{ list_item.ytdChange|floatformat:5}} %</td>
-                <td>${{ list_item.week52High|intcomma}}</td>
-                <td>${{ list_item.week52Low|intcomma}}</td>
-                <td><a href="admin" class="btn btn-danger">Delete</a> </td>
-                
-            </tr>
-        {%endfor%}  
-    {%endif%} 
-     
-  </tbody>
- 
-</table></br></br>
+    </script>
+    <br><br>
 
-</body>
-{%comment%}
-      {%for item in ticker%}
-           <a href="{% url 'deleteDB' item.id %}" class="btn btn-secondary">Delete {{ item}}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      {%endfor %} 
-{% endcomment %}
-{% endblock %}
 
-{%block js %}
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.24/af-2.3.5/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/cr-1.5.3/fc-3.3.2/kt-2.6.1/r-2.2.7/rg-1.1.2/rr-1.2.7/sl-1.3.2/datatables.min.css"/>
- 
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.24/af-2.3.5/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/cr-1.5.3/fc-3.3.2/kt-2.6.1/r-2.2.7/rg-1.1.2/rr-1.2.7/sl-1.3.2/datatables.min.js"></script>
-  
+    {% endblock js %}
 
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.24/af-2.3.5/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/cr-1.5.3/fc-3.3.2/kt-2.6.1/r-2.2.7/rg-1.1.2/rr-1.2.7/sl-1.3.2/datatables.min.css"/>
- 
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.24/af-2.3.5/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/cr-1.5.3/fc-3.3.2/kt-2.6.1/r-2.2.7/rg-1.1.2/rr-1.2.7/sl-1.3.2/datatables.min.js"></script>
-  
-  <script>
-    
-    $(document).ready( function () {
-    $('#myTable').DataTable({
 
-    dom: 'B<"clear">lfrtip',
-    buttons: {
-        name: 'primary',
-        buttons: [ 'copy', 'csv', 'excel', 'pdf' ,'print']
-
-        }}
-    );
-} );
-</script>
-</br></br>
-     
-
-{% endblock js %}
-  
- 
 
