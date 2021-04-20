@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\stocks",
+    "\\stocks\\quotes",
+    "\\stocks\\quotes\\static",
+    "\\stocks\\quotes\\static\\media",
+    "\\stocks\\quotes\\templates",
+    "\\stocks\\stocks"
+  ],
+  "SelectedNode": "\\stocks\\quotes\\forms.py",
+  "PreviewInSolutionExplorer": false
+}
